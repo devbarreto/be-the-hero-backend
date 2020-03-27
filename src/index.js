@@ -1,4 +1,5 @@
 const express = require("express");
+const routes = require("./routes");
 
 const severPort = 3030;
 const successSeverUp = () =>
@@ -19,5 +20,7 @@ app.get("/isAlive", (request, response) => {
 app.get("/isAliveBody", (request, response) => {
   response.status(200).send(request.body);
 });
+
+app.use(routes);
 
 app.listen(severPort, successSeverUp);
