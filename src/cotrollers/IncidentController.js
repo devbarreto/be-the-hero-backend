@@ -1,9 +1,44 @@
 const connection = require("../database/connection");
-const { TABLE_NAME_INCIDENTS } = require("../constants/tablesNames");
+const {
+  TABLE_NAME_INCIDENTS,
+  TABLE_NAME_ONGS
+} = require("../constants/tablesNames");
 
 module.exports = {
   async index(request, response) {
-    const incidents = await connection(TABLE_NAME_INCIDENTS).select("*");
+    const { page = 1, itemsPerPage = 5 } = request.query;
+    const [total] = await connection(TABLE_NAME_INCIDENTS).count();
+
+    console.log(
+      "\n\n\nquery",
+      `${TABLE_NAME_INCIDENTS}.*`,
+      `${TABLE_NAME_ONGS}.name`,
+      `${TABLE_NAME_ONGS}.email`,
+      `${TABLE_NAME_ONGS}.whatsapp`,
+      `${TABLE_NAME_ONGS}.city`,
+      `${TABLE_NAME_ONGS}.uf\n\n\n\n`
+    );
+
+    const incidents = await connection(TABLE_NAME_INCIDENTS)
+      .join(
+        TABLE_NAME_ONGS,
+        `${TABLE_NAME_ONGS}.id`,
+        "=",
+        `${TABLE_NAME_INCIDENTS}.ong_id`
+      )
+      .limit(itemsPerPage)
+      .offset((page - 1) * itemsPerPage)
+      .select([
+        `${TABLE_NAME_INCIDENTS}.*`,
+        `${TABLE_NAME_ONGS}.name`,
+        `${TABLE_NAME_ONGS}.email`,
+        `${TABLE_NAME_ONGS}.whatsapp`,
+        `${TABLE_NAME_ONGS}.city`,
+        `${TABLE_NAME_ONGS}.uf`
+      ]);
+
+    response.header("X-Total-Count", total["count(*)"]);
+
     return response.json(incidents);
   },
   async create(request, response) {
