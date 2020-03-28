@@ -9,16 +9,6 @@ module.exports = {
     const { page = 1, itemsPerPage = 5 } = request.query;
     const [total] = await connection(TABLE_NAME_INCIDENTS).count();
 
-    console.log(
-      "\n\n\nquery",
-      `${TABLE_NAME_INCIDENTS}.*`,
-      `${TABLE_NAME_ONGS}.name`,
-      `${TABLE_NAME_ONGS}.email`,
-      `${TABLE_NAME_ONGS}.whatsapp`,
-      `${TABLE_NAME_ONGS}.city`,
-      `${TABLE_NAME_ONGS}.uf\n\n\n\n`
-    );
-
     const incidents = await connection(TABLE_NAME_INCIDENTS)
       .join(
         TABLE_NAME_ONGS,

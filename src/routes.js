@@ -6,6 +6,18 @@ const SessionController = require("./cotrollers/SessionController");
 
 const routes = express.Router();
 
+routes.get("/isAlive/:id/:age/:city", (request, response) => {
+  response.status(200).send(request.params);
+});
+
+routes.get("/isAlive", (request, response) => {
+  response.status(200).send(request.query);
+});
+
+routes.get("/isAliveBody", (request, response) => {
+  response.status(200).send(request.body);
+});
+
 routes.post("/session", SessionController.create);
 
 routes.get("/ongs", OngController.index);
