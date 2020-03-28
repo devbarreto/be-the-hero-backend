@@ -1,9 +1,10 @@
 const crypto = require("crypto");
 const connection = require("../database/connection");
+const { TABLE_NAME_ONGS } = require("../constants/tablesNames");
 
 module.exports = {
   async index(request, response) {
-    const ongs = await connection("ongs").select("*");
+    const ongs = await connection(TABLE_NAME_ONGS).select("*");
     return response.json(ongs);
   },
   async create(request, response) {
@@ -14,7 +15,14 @@ module.exports = {
       .toString("HEX")
       .toUpperCase();
 
-    await connection("ongs").insert({ id, name, email, whatsapp, city, uf });
+    await connection(TABLE_NAME_ONGS).insert({
+      id,
+      name,
+      email,
+      whatsapp,
+      city,
+      uf
+    });
 
     response.status(200).send({ id });
   }
