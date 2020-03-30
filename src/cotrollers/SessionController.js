@@ -5,11 +5,11 @@ module.exports = {
   async create(request, response) {
     const { id } = request.body;
 
-    const ong = await connection(TABLE_NAME_ONGS)
+    const [ong] = await connection(TABLE_NAME_ONGS)
       .where("id", id)
       .select("name");
 
-    if (Boolean(ong) && !ong.length) {
+    if (!ong) {
       return response.status(400).json({ error: "No ONG found with this ID" });
     }
 
